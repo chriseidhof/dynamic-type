@@ -4,11 +4,11 @@ import Foundation
 import SwiftUI
 
 struct DynamicTypeKey: EnvironmentKey {
-    static var defaultValue: DynamicTypeSize = .large
+    static var defaultValue: DynamicTypeSize?
 }
 
 extension EnvironmentValues {
-    public var myDynamicTypeSize: DynamicTypeSize {
+    public var myDynamicTypeSize: DynamicTypeSize? {
         get { self[DynamicTypeKey.self] }
         set { self[DynamicTypeKey.self] = newValue }
     }
@@ -31,7 +31,7 @@ struct MyFontModifier: ViewModifier {
     var font: DynamicTypeStyle
     @Environment(\.myDynamicTypeSize) private var dynamicTypeSize
     func body(content: Content) -> some View {
-        let metrics = font.resolve(for: dynamicTypeSize)
+        let metrics = font.resolve(for: dynamicTypeSize ?? .large)
         content
             .font(.system(size: metrics.size, weight: metrics.weight.weight))
     }
@@ -42,7 +42,7 @@ extension View {
         modifier(MyFontModifier(font: font))
     }
 
-    public func dynamicTypeSize(size: DynamicTypeSize = .large) -> some View {
+    public func dynamicTypeSize(size: DynamicTypeSize?) -> some View {
         environment(\.myDynamicTypeSize, size)
     }
 }
@@ -65,7 +65,7 @@ extension View {
 
     /// The value scaled based on the current environment.
     public var wrappedValue: Value {
-        let multiplier = textStyle.resolve(for: size).size / textStyle.resolve(for: .large).size
+        let multiplier = textStyle.resolve(for: size ?? .large).size / textStyle.resolve(for: .large).size
         return source * .init(multiplier)
     }
 }
