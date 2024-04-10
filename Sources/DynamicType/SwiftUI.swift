@@ -46,3 +46,26 @@ extension View {
         environment(\.myDynamicTypeSize, size)
     }
 }
+
+@propertyWrapper public struct MyScaledMetric<Value> : DynamicProperty where Value : BinaryFloatingPoint {
+    @Environment(\.myDynamicTypeSize) private var size
+    var source: Value
+    var textStyle: DynamicTypeStyle = .body
+
+    public init(wrappedValue: Value, relativeTo textStyle: DynamicTypeStyle) {
+        self.source = wrappedValue
+        self.textStyle = textStyle
+    }
+
+    /// Creates the scaled metric with an unscaled value using the default
+    /// scaling.
+    public init(wrappedValue: Value) {
+        self.source = wrappedValue
+    }
+
+    /// The value scaled based on the current environment.
+    public var wrappedValue: Value {
+        let multiplier = textStyle.resolve(for: size).size / textStyle.resolve(for: .large).size
+        return source * .init(multiplier)
+    }
+}
