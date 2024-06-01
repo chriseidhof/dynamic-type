@@ -27,6 +27,21 @@ public enum DynamicTypeSize: String, Hashable, CaseIterable {
     case accessibilityExtraExtraExtraLarge = "Accessibility Extra Extra Extra Large"
 }
 
+extension DynamicType.DynamicTypeSize {
+    mutating public func smaller() {
+        let i = Self.allCases.firstIndex(of: self)!
+        guard i > 0 else { return }
+        self = Self.allCases[i-1]
+    }
+
+    mutating public func larger() {
+        let i = Self.allCases.firstIndex(of: self)!
+        guard i + 1 < Self.allCases.count else { return }
+        self = Self.allCases[i+1]
+    }
+}
+
+
 extension DynamicTypeStyle {
     public func value(in instance: DynamicTypeInstance) -> SizeAndLeading {
         switch self {
