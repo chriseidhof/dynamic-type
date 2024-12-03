@@ -10,9 +10,10 @@ public enum DynamicTypeStyle: String, Hashable, CaseIterable, Codable {
     case footnote = "Footnote"
     case caption1 = "Caption 1"
     case caption2 = "Caption 2"
+    static public let caption = Self.caption1
 }
 
-public enum DynamicTypeSize: String, Hashable, CaseIterable {
+public enum DynamicTypeSize: String, Hashable, CaseIterable, Codable {
     case extraSmall = "Extra Small"
     case small = "Small"
     case medium = "Medium"
